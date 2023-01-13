@@ -16,8 +16,8 @@ public class Despesa {
 	private Long id;
 	
 	@Column(length = 100, nullable = false)
-	private String nome;
+	private String name;
 	
 	@Column(length = 100, nullable = false)
-	private String categoria;
+	private String category;
 }
