@@ -12,11 +12,11 @@ import com.daniel.organizadorspring.repository.DespesaRepository;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/api/despesas")
+@RequestMapping("api/despesas")
 @AllArgsConstructor
 public class DespesaController {
 
-	private final DespesaRepository despesaRepository = null;
+	private final DespesaRepository despesaRepository;
 	
 	@GetMapping
 	public List<Despesa> list(){
