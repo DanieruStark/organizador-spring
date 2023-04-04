@@ -23,4 +23,7 @@ public class Despesa {
 	
 	@Column(length = 100, nullable = false)
 	private String category;
+
+	@Column(nullable = false)
+	private double price;
 }

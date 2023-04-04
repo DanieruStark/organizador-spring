@@ -21,8 +21,9 @@ public class OrganizadorSpringApplication {
 			despesaRepository.deleteAll();
 			
 			Despesa d = new Despesa();
-			d.setName("Angular com Spring");
-			d.setCategory("front-end");
+			d.setName("Água");
+			d.setCategory("Contas a pagar");
+			d.setPrice(79.50);
 			
 			despesaRepository.save(d);
 		};
