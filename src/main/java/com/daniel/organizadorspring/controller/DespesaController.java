@@ -3,7 +3,9 @@ package com.daniel.organizadorspring.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +24,17 @@ import lombok.AllArgsConstructor;
 public class DespesaController {
 
 	private final DespesaRepository despesaRepository;
-	
+
 	@GetMapping
-	public @ResponseBody List<Despesa> list(){
+	public @ResponseBody List<Despesa> list() {
 		return despesaRepository.findAll();
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Despesa> findById(@PathVariable Long id){
+		return despesaRepository.findById(id)
+		.map(rec -> ResponseEntity.ok().body(rec))
+		.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
