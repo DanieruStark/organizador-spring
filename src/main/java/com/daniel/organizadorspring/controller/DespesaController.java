@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.daniel.organizadorspring.model.Despesa;
 import com.daniel.organizadorspring.repository.DespesaRepository;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
+@Validated
 @RestController
 @RequestMapping("api/despesas")
 @AllArgsConstructor
@@ -33,7 +38,7 @@ public class DespesaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Despesa> findById(@PathVariable Long id) {
+	public ResponseEntity<Despesa> findById(@PathVariable @NotNull @Positive Long id) {
 		return despesaRepository.findById(id)
 				.map(rec -> ResponseEntity.ok().body(rec))
 				.orElse(ResponseEntity.notFound().build());
@@ -41,12 +46,12 @@ public class DespesaController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Despesa create(@RequestBody Despesa despesa) {
+	public Despesa create(@RequestBody @Valid Despesa despesa) {
 		return despesaRepository.save(despesa);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Despesa> update(@PathVariable Long id, @RequestBody Despesa despesa) {
+	public ResponseEntity<Despesa> update(@PathVariable Long id, @RequestBody @Valid Despesa despesa) {
 		return despesaRepository.findById(id)
 				.map(rec -> {
 					rec.setName(despesa.getName());
