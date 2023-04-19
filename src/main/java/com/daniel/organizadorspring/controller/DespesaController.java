@@ -51,7 +51,7 @@ public class DespesaController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Despesa> update(@PathVariable Long id, @RequestBody @Valid Despesa despesa) {
+	public ResponseEntity<Despesa> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid Despesa despesa) {
 		return despesaRepository.findById(id)
 				.map(rec -> {
 					rec.setName(despesa.getName());
