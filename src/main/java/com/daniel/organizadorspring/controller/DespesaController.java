@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daniel.organizadorspring.model.Despesa;
-import com.daniel.organizadorspring.repository.DespesaRepository;
 import com.daniel.organizadorspring.service.DespesaService;
 
 import jakarta.validation.Valid;
@@ -41,10 +40,8 @@ public class DespesaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Despesa> findById(@PathVariable @NotNull @Positive Long id) {
-		return despesaService.findById(id)
-				.map(rec -> ResponseEntity.ok().body(rec))
-				.orElse(ResponseEntity.notFound().build());
+	public Despesa findById(@PathVariable @NotNull @Positive Long id) {
+		return despesaService.findById(id);
 	}
 
 	@PostMapping
@@ -54,18 +51,14 @@ public class DespesaController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Despesa> update(@PathVariable @NotNull @Positive Long id,
+	public Despesa update(@PathVariable @NotNull @Positive Long id,
 			@RequestBody @Valid Despesa despesa) {
-		return despesaService.update(id, despesa)
-				.map(rec ->	ResponseEntity.ok().body(rec))
-				.orElse(ResponseEntity.notFound().build());
+		return despesaService.update(id, despesa);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		if(despesaService.delete(id)){
-			return ResponseEntity.noContent().<Void>build();
-		}
-		return ResponseEntity.notFound().build();
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long id) {
+		despesaService.delete(id);
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.daniel.exception.RecordNotFoundException;
 import com.daniel.organizadorspring.model.Despesa;
 import com.daniel.organizadorspring.repository.DespesaRepository;
 
@@ -27,15 +28,15 @@ public class DespesaService {
         return despesaRepository.findAll();
     }
 
-    public Optional<Despesa> findById(@PathVariable @NotNull @Positive Long id) {
-        return despesaRepository.findById(id);
+    public Despesa findById(@PathVariable @NotNull @Positive Long id) {
+        return despesaRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
     public Despesa create(@Valid Despesa despesa) {
         return despesaRepository.save(despesa);
     }
 
-    public Optional<Despesa> update(@NotNull @Positive Long id, @Valid Despesa despesa) {
+    public Despesa update(@NotNull @Positive Long id, @Valid Despesa despesa) {
         return despesaRepository.findById(id)
                 .map(rec -> {
                     rec.setName(despesa.getName());
@@ -43,15 +44,12 @@ public class DespesaService {
                     rec.setPrice(despesa.getPrice());
 
                     return despesaRepository.save(rec);
-                });
+                }).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
-    public boolean delete(@PathVariable Long id) {
-        return despesaRepository.findById(id)
-                .map(rec -> {
-                    despesaRepository.deleteById(id);
-                    return true;
-                })
-                .orElse(false);
+    public void delete(@PathVariable Long id) {
+        despesaRepository.delete(
+            despesaRepository.findById(id)
+            .orElseThrow(() -> new RecordNotFoundException(id)));
     }
 }
