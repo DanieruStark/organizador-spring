@@ -4,6 +4,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
+import com.daniel.organizadorspring.enums.Category;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -38,7 +39,7 @@ public class Despesa {
 	@Length(max = 30)
 	@Pattern(regexp = "Contas a pagar|Lazer|Entrada")
 	@Column(length = 100, nullable = false)
-	private String category;
+	private Category category;
 
 	@Column(nullable = false)
 	private double price;
