@@ -3,7 +3,6 @@ package com.daniel.organizadorspring.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.daniel.organizadorspring.model.Despesa;
+import com.daniel.organizadorspring.dto.DespesaDto;
 import com.daniel.organizadorspring.service.DespesaService;
 
 import jakarta.validation.Valid;
@@ -35,24 +34,24 @@ public class DespesaController {
 	}
 
 	@GetMapping
-	public @ResponseBody List<Despesa> list() {
+	public @ResponseBody List<DespesaDto> list() {
 		return despesaService.list();
 	}
 
 	@GetMapping("/{id}")
-	public Despesa findById(@PathVariable @NotNull @Positive Long id) {
+	public DespesaDto findById(@PathVariable @NotNull @Positive Long id) {
 		return despesaService.findById(id);
 	}
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Despesa create(@RequestBody @Valid Despesa despesa) {
+	public DespesaDto create(@RequestBody @Valid @NotNull DespesaDto despesa) {
 		return despesaService.create(despesa);
 	}
 
 	@PutMapping("/{id}")
-	public Despesa update(@PathVariable @NotNull @Positive Long id,
-			@RequestBody @Valid Despesa despesa) {
+	public DespesaDto update(@PathVariable @NotNull @Positive Long id,
+			@RequestBody @Valid @NotNull DespesaDto despesa) {
 		return despesaService.update(id, despesa);
 	}
 

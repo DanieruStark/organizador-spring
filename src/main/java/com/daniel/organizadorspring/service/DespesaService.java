@@ -1,14 +1,15 @@
 package com.daniel.organizadorspring.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.daniel.exception.RecordNotFoundException;
-import com.daniel.organizadorspring.model.Despesa;
+import com.daniel.organizadorspring.dto.DespesaDto;
+import com.daniel.organizadorspring.dto.mapper.DespesaMapper;
 import com.daniel.organizadorspring.repository.DespesaRepository;
 
 import jakarta.validation.Valid;
@@ -19,37 +20,40 @@ import jakarta.validation.constraints.Positive;
 @Service
 public class DespesaService {
     private final DespesaRepository despesaRepository;
+    private final DespesaMapper despesaMapper;
 
-    public DespesaService(DespesaRepository despesaRepository) {
+    public DespesaService(DespesaRepository despesaRepository, DespesaMapper despesaMapper) {
         this.despesaRepository = despesaRepository;
+        this.despesaMapper = despesaMapper;
     }
 
-    public List<Despesa> list() {
-        return despesaRepository.findAll();
+    public List<DespesaDto> list() {
+        return despesaRepository.findAll().stream().map(despesaMapper::toDto).collect(Collectors.toList());
     }
 
-    public Despesa findById(@PathVariable @NotNull @Positive Long id) {
-        return despesaRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id));
+    public DespesaDto findById(@PathVariable @NotNull @Positive Long id) {
+        return despesaRepository.findById(id).map(despesaMapper::toDto)
+                .orElseThrow(() -> new RecordNotFoundException(id));
     }
 
-    public Despesa create(@Valid Despesa despesa) {
-        return despesaRepository.save(despesa);
+    public DespesaDto create(@Valid @NotNull DespesaDto despesa) {
+        return despesaMapper.toDto(despesaRepository.save(despesaMapper.toEntity(despesa)));
     }
 
-    public Despesa update(@NotNull @Positive Long id, @Valid Despesa despesa) {
+    public DespesaDto update(@NotNull @Positive Long id, @Valid @NotNull DespesaDto despesa) {
         return despesaRepository.findById(id)
                 .map(rec -> {
-                    rec.setName(despesa.getName());
-                    rec.setCategory(despesa.getCategory());
-                    rec.setPrice(despesa.getPrice());
+                    rec.setName(despesa.name());
+                    rec.setCategory(despesa.category());
+                    rec.setPrice(despesa.price());
 
-                    return despesaRepository.save(rec);
+                    return despesaMapper.toDto(despesaRepository.save(rec));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
     public void delete(@PathVariable Long id) {
         despesaRepository.delete(
-            despesaRepository.findById(id)
-            .orElseThrow(() -> new RecordNotFoundException(id)));
+                despesaRepository.findById(id)
+                        .orElseThrow(() -> new RecordNotFoundException(id)));
     }
 }
