@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.daniel.organizadorspring.enums.Category;
 import com.daniel.organizadorspring.model.Despesa;
 import com.daniel.organizadorspring.repository.DespesaRepository;
 
@@ -22,7 +23,7 @@ public class OrganizadorSpringApplication {
 			
 			Despesa d = new Despesa();
 			d.setName("Água");
-			d.setCategory("Contas a pagar");
+			d.setCategory(Category.CONTAS_A_PAGAR);
 			d.setPrice(79.50);
 			
 			despesaRepository.save(d);

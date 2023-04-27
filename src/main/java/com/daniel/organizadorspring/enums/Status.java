@@ -1,11 +1,11 @@
 package com.daniel.organizadorspring.enums;
 
-public enum Category {
-    CONTAS_A_PAGAR("Contas a Pagar"), LAZER("Lazer"), ENTRADA("Entrada");
+public enum Status {
+    ATIVO("Ativo"), INATIVO("Inativo");
 
     private String value;
 
-    private Category(String value){
+    private Status(String value){
         this.value = value;
     }
 
@@ -17,5 +17,4 @@ public enum Category {
     public String toString() {
         return value;
     }
-    
 }

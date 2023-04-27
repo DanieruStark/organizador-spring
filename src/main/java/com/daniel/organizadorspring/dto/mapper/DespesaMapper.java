@@ -3,6 +3,7 @@ package com.daniel.organizadorspring.dto.mapper;
 import org.springframework.stereotype.Component;
 
 import com.daniel.organizadorspring.dto.DespesaDto;
+import com.daniel.organizadorspring.enums.Category;
 import com.daniel.organizadorspring.model.Despesa;
 
 @Component
@@ -13,7 +14,8 @@ public class DespesaMapper {
             return null;
         }
 
-        return new DespesaDto(despesa.getId(), despesa.getName(), despesa.getCategory(), despesa.getPrice());
+        return new DespesaDto(
+                despesa.getId(), despesa.getName(), despesa.getCategory().getValue(), despesa.getPrice());
     }
 
     public Despesa toEntity(DespesaDto despesaDto) {
@@ -27,11 +29,23 @@ public class DespesaMapper {
             despesa.setId(despesaDto.id());
         }
         despesa.setName(despesaDto.name());
-        despesa.setCategory(despesaDto.category());
+        despesa.setCategory(convertCategoryValue(despesaDto.category()));
         despesa.setPrice(despesaDto.price());
-        despesa.setStatus("Ativo");
 
         return despesa;
 
+    }
+
+    public Category convertCategoryValue(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        return switch (value) {
+            case "Contas a Pagar" -> Category.CONTAS_A_PAGAR;
+            case "Lazer" -> Category.LAZER;
+            case "Entrada" -> Category.ENTRADA;
+            default -> throw new IllegalArgumentException("Categoria inválida" + value);
+        };
     }
 }

@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.daniel.exception.RecordNotFoundException;
 import com.daniel.organizadorspring.dto.DespesaDto;
@@ -31,7 +30,7 @@ public class DespesaService {
         return despesaRepository.findAll().stream().map(despesaMapper::toDto).collect(Collectors.toList());
     }
 
-    public DespesaDto findById(@PathVariable @NotNull @Positive Long id) {
+    public DespesaDto findById(@NotNull @Positive Long id) {
         return despesaRepository.findById(id).map(despesaMapper::toDto)
                 .orElseThrow(() -> new RecordNotFoundException(id));
     }
@@ -44,14 +43,14 @@ public class DespesaService {
         return despesaRepository.findById(id)
                 .map(rec -> {
                     rec.setName(despesa.name());
-                    rec.setCategory(despesa.category());
+                    rec.setCategory(despesaMapper.convertCategoryValue(despesa.category()));
                     rec.setPrice(despesa.price());
 
                     return despesaMapper.toDto(despesaRepository.save(rec));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
-    public void delete(@PathVariable Long id) {
+    public void delete(Long id) {
         despesaRepository.delete(
                 despesaRepository.findById(id)
                         .orElseThrow(() -> new RecordNotFoundException(id)));
